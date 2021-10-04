@@ -11,7 +11,34 @@ knitr::opts_chunk$set(echo = TRUE)
 
 1.  Explain coercion rules. Create an example that demonstrates the fixed order of the coercion rules.
 
+Coercion is forcing one data type to be treated as a different data type. Numbers are treated as doubles by default unless they are coerced to be integers. Doubles that have decimal places will drop the decimals if coerced to be integers. Logicals can be coerced to other data types because TRUE/FALSE are treated as 1/0. Logicals will be treated as characters if included in a vector with other characters. 
+
 ```{r}
+example_list <- 1:10
+logical_list <- example_list > 5
+#creates a logical type TRUE/FALSE list for numbers in the example_list greater than 5
+typeof(logical_list)
+#TRUE/FALSE is logical type by default
+to_double <- as.numeric(logical_list)
+typeof(to_double)
+#tells R to treat the TRUE/FALSE list as 1/0. Numerical data are doubles by default
+to_integer <- as.integer(logical_list)
+typeof(to_integer)
+#tells R to treat 1/0 as integers
+to_character <- as.character(logical_list)
+typeof(to_character)
+#tells R to treat TRUE/FALSE as characters
+
+to_logicals <- c(0, 1, 1, 0)
+as.logical(to_logicals)
+#1/0 can be coerced to be logicals
+
+sum(to_double)
+sum(to_integer)
+#this works because TRUE/FALSE were coerced into doubles and integers 
+#taking the sum of logical_list also works without being coerced first
+sum(to_character)
+#this generates an error because TRUE/FALSE were coerced into characters and can no longer be treated as 1/0
 
 ```
 
@@ -20,41 +47,64 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 as.integer(c("one", "two", "three"))
 ```
+"one", "two", and "three" are the character data type, not a numeric data type. The as.integer function will coerce a vector to be an integer data type, but the vector must be numbers.
+
 
 3.  Create a vector of a sequence of integers starting at 2, ending at 100, and increasing by 2. Assign the vector to an object called `evens`. Coerce the vector to be of type `integer`. Confirm that the vector is of type `integer`.
 
 ```{r}
+evens <- seq(from = 2, 
+             to = 100, 
+             by = 2)
+evens <- as.integer(evens)
+is.integer(evens)
 
 ```
 
 4.  Create a vector of random numbers with a length equal to your vector in exercise 3. Use a seed with a value of 730 before creating your vector. Assign the vector to an object called `randoms`. Confirm the type of the vector.
 
 ```{r}
-
+set.seed(730)
+randoms <- runif(n = 50, min = 0, max = 1)
+typeof(randoms)
 ```
 
 5.  Create a vector demonstrating which values in exercise 3 are greater than `0.75`. Assign the vector to an object called `logicals`. Confirm the type of the vector.
 
 ```{r}
-
+logicals <- evens > 0.75
+typeof(logicals)
 ```
 
 6.  Create a data frame including the three vectors created in exercises 3 through 5. Assign it to an object following best practices for naming.
 
 ```{r}
+week_1_df <- data.frame(Exercise3 = evens,
+                                Exercise4 = randoms,
+                                Exercise5 = logicals)
 
 ```
 
 7.  Create a new object which is the sum of `evens` and `randoms` all divided by 3. Demonstrate how to calculate basic summary statistics for this new object (mean, median, minimum, maximum, standard deviation, variance).
 
 ```{r}
+new_object <- (evens + randoms) / 3
+mean(new_object)
+median(new_object)
+min(new_object)
+max(new_object)
+sd(new_object)
+var(new_object)
+
 
 ```
 
 8.  We discussed the idea that R is a "vectorized" language. Explain this concept. Why is it important?
 
+Vectorized means that a function will operate on each part of a vector, all at the same time without having to tell the function to operate on each piece. In the example above, evens + randoms adds each of the 50 numbers in each vector producing a new vector of 50 numbers. Using (evens + randoms) / 3, the division happens to each of the 50 numbers. It is important because it makes the code more simple and concise. Having to write a function that acts on a vector piece by piece is harder to write and read and more prone to errors. 
+
 9.  Run the `sessionInfo` function in a chunk.
 
 ```{r}
-
+sessionInfo()
 ```
